@@ -32,3 +32,29 @@ FROM
 WHERE 
     commune = "TOULOUSE" AND code_departement = 31
 
+-- 5 Filtrez les communes dont l'estimation du prix moyen au mètre carré actuel < 1 300 EUR/m2.
+-- Filtrer sur une fct d'agrégation (avg) => vous ne pouvez pas le faire dans la clause WHERE, mais vous devez le faire dans la clause HAVING.
+SELECT 
+    commune,
+    avg(valeur_fonciere_actuelle/surface) as moyenne_prix_m2_commune
+FROM 
+    bien_immo
+GROUP BY 
+    commune
+HAVING 
+        moyenne_prix_m2_commune < 1300
+
+-- 6 Reprenez la même requête que la question précédente, en filtrant AVANT L'AGRÉGATION sur le département 31.
+SELECT 
+    commune,
+    code_departement,
+    avg(valeur_fonciere_actuelle/surface) as moyenne_prix_m2_commune
+FROM 
+    bien_immo
+WHERE         -- Filtre avant agrégation
+    code_departement = 31
+GROUP BY 
+    commune
+HAVING 
+        moyenne_prix_m2_commune < 1300
+
